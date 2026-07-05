@@ -156,7 +156,7 @@ $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)
 
 | 类型 | 结构 | 优点 | 缺点 |
 |------|------|------|------|
-| Post-Norm | x + Sublayer(LayerNorm(x)) | 原始设计 | 训练不稳定 |
+| Post-Norm | LayerNorm(x + Sublayer(x)) | 原始设计 | 训练不稳定 |
 | Pre-Norm | x + Sublayer(LayerNorm(x)) | 训练稳定，收敛快 | 深层特征可能弱化 |
 
 **现代LLM普遍采用Pre-Norm**（如GPT-2、LLaMA）
