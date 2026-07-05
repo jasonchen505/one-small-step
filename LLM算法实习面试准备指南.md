@@ -204,9 +204,9 @@ Dual Chunk Attention
 **核心思想**：将注意力拆分为多个"头"，每个头学习不同的注意力模式
 
 **参数量计算**：
-- Q, K, V投影：3 × (d_model × d_k)
+- Q, K, V投影：3 × (d_model × d_model)
 - 输出投影：d_model × d_model
-- 总计：4 × d_model × d_k（假设d_k = d_model / h）
+- 总计：4 × d_model × d_k × h = 4 × d_model × d_model（假设d_k = d_model / h = d_head = d_q = d_v）
 
 **多头优势**：
 - 不同头关注不同位置和语义
@@ -218,9 +218,9 @@ Dual Chunk Attention
 **核心改进**：所有头共享K和V，仅Q独立
 
 **参数效率**：
-- MHA：4 × d_model × d_k
-- MQA：d_model × d_k + 2 × d_model × d_k/n_heads
-- **减少约75%的KV Cache**
+- MHA：4 × d_model × d_model
+- MQA：2 × d_model × d_k + 2 × d_model × d_model
+- **减少约1 - 1/h的KV Cache**
 
 **权衡**：
 - ✅ 推理速度快（KV Cache小）
@@ -235,7 +235,7 @@ Dual Chunk Attention
 
 **参数效率**：
 - 介于MHA和MQA之间
-- 通常分8组或16组
+- 通常分8组或16组KV heads group
 
 **优势**：
 - 平衡效率与效果
