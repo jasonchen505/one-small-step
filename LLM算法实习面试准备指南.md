@@ -635,8 +635,8 @@ AI Agent
 **解决方案**：缓存历史token的K和V，避免重复计算
 
 **内存计算**：
-- 每个token的KV Cache：2 × n_layers × n_heads × d_head × seq_len
-- 例：LLaMA-7B，seq_len=2048，KV Cache约1GB
+- 每个token的KV Cache：2 × n_layers × n_kv_heads × d_head 
+- 例：LLaMA-7B，seq_len=2048，整个seq的KV Cache约1GB
 
 **PagedAttention（vLLM）**：
 - 将KV Cache分页管理
