@@ -801,9 +801,8 @@ RAG系统设计需要考虑以下关键点：
    - 领域特定：微调或选择领域模型
 
 3. **向量数据库**
-   - 小规模：FAISS
-   - 中规模：Milvus, Pinecone
-   - 大规模：Weaviate, Qdrant
+   - 小规模：Chroma, pgvector, FAISS(自建)
+   - 中大规模：Milvus, Pinecone，Weaviate, Qdrant
 
 4. **检索策略**
    - 向量检索
