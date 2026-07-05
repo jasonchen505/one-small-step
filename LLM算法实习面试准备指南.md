@@ -288,16 +288,31 @@ Dual Chunk Attention
 
 ### 4.7 Dual Chunk Attention (DCA)
 
-**核心思想**：将长序列分块，块内+块间注意力
+**核心思想**：Dual Chunk Attention 将长序列划分为 chunks，并将注意力计算分解为三类：
 
-**技术细节**：
-1. 块内注意力：标准自注意力
-2. 块间注意力：压缩后的块表示
-3. 连续块注意力：处理跨块依赖
+* **Intra-Chunk Attention**：处理同一 chunk 内的 token 关系
+* **Inter-Chunk Attention**：处理不同 chunks 之间的 token 关系
+* **Successive-Chunk Attention**：专门处理相邻 chunks 之间的局部连续性
 
-**复杂度**：O(L × w)，其中w为块大小
+DCA 的重点不是简单地把注意力稀疏化为固定窗口，而是通过 chunk-based positional remapping 控制 RoPE 中的相对位置距离，从而改善模型在超出训练长度时的长度外推能力。
 
-**代表应用**：Qwen扩展到1M上下文
+**复杂度说明**：
+
+如果只是普通 block-local attention 或 sliding-window attention，可以写成： O(Lw)
+
+其中 L 是序列长度，w是窗口大小或 chunk size。
+
+但对原始 DCA 来说，不应简单写成：O(Lw)
+
+因为 DCA 还包含 inter-chunk attention，用于跨 chunk 聚合信息。其主要目标是改善长上下文位置外推，并与 FlashAttention 等工程优化兼容，而不是单独把 full attention 的理论复杂度严格降为线性。
+
+更准确的写法是：
+
+[
+\text{DCA is a chunk-based RoPE extrapolation method, not merely an } O(Lw) \text{ sparse attention pattern.}
+]
+
+**代表应用**：Qwen2.5-1M 使用 DCA 将 256K 训练上下文进一步外推到 1M；实际 1M 推理效率还结合了 MInference、chunked prefill 和其他 serving 优化。
 
 ---
 
