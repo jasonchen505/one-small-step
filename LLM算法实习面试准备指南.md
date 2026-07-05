@@ -306,11 +306,7 @@ DCA 的重点不是简单地把注意力稀疏化为固定窗口，而是通过 
 
 因为 DCA 还包含 inter-chunk attention，用于跨 chunk 聚合信息。其主要目标是改善长上下文位置外推，并与 FlashAttention 等工程优化兼容，而不是单独把 full attention 的理论复杂度严格降为线性。
 
-更准确的写法是：
-
-[
-\text{DCA is a chunk-based RoPE extrapolation method, not merely an } O(Lw) \text{ sparse attention pattern.}
-]
+DCA is a chunk-based RoPE extrapolation method, not merely an  O(Lw) sparse attention pattern.
 
 **代表应用**：Qwen2.5-1M 使用 DCA 将 256K 训练上下文进一步外推到 1M；实际 1M 推理效率还结合了 MInference、chunked prefill 和其他 serving 优化。
 
